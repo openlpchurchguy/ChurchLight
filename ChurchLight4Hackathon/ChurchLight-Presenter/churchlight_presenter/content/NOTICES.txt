@@ -1,0 +1,31 @@
+Content bundled with ChurchLight Presenter
+==========================================
+
+The program's code is licensed under the AGPL (see the license notice in each source file). The
+content listed here is separate from the code and has its own terms.
+
+King James Version (bibles/kjv.csv)
+-----------------------------------
+Text:     The King James (Authorized) Version of the Holy Bible, the standardized text of 1769,
+          66 books (no Apocrypha), 31,102 verses.
+Source:   eBible.org, "King James (Authorized) Version", id eng-kjv2006,
+          https://ebible.org/find/show.php?id=eng-kjv2006 (file eng-kjv2006_vpl.zip, downloaded 2026-10-26;
+          the eBible archive is dated 2026-09-26). eBible.org credits the CrossWire Bible Society.
+License:  Public domain in the United States and most of the world.
+          In the United Kingdom, letters patent issued by King James give the Cambridge University Press,
+          the Oxford University Press and Collins the exclusive right to print this translation there;
+          printing it in, or importing printed copies into, the UK needs their permission. Please see
+          the Queen's (King's) Printer patent information if you distribute the program in the UK.
+Changes:  made with tools/make_kjv.py and nothing else: book codes became book numbers, the paragraph
+          sign was removed, extra spaces were squeezed. The words are unchanged. kjv.sha256 holds the
+          checksum of kjv.csv; the program installs the file only if it matches.
+
+No other translation (NIV, ESV, NLT, NKJV, NASB and so on) is bundled; those are under copyright.
+
+Fonts
+-----
+The fonts in server/static/fonts (from fonts.google.com) keep their own licenses: SIL Open Font License 1.1,
+in the OFL-*.txt file beside each family. Families: Open Sans, Lato, Source Sans 3, Roboto, Nunito,
+Atkinson Hyperlegible, Montserrat, Poppins, Oswald, Anton, Merriweather, Lora, Libre Baskerville, PT Serif,
+Playfair Display, Cinzel, Dancing Script, Bricolage Grotesque. The files are shipped unmodified. Keep the
+license files with the fonts in every package.

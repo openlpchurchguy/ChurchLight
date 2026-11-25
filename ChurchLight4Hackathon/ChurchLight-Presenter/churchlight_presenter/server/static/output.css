@@ -1,0 +1,105 @@
+/* Public outputs are transparent so XSplit/OBS can lay them over video.
+   The stage page is the only one with a background. */
+html, body { margin: 0; height: 100%; background: transparent; overflow: hidden;
+  font-family: system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; color: #fff; }
+body.stage { background: #111; }
+/* ?test: the Test button in the setup guide shows this, whatever the screen is for, so a church can see which monitor it is */
+html.testscreen, html.testscreen body { background: #fff; }
+.testscreen-word { position: fixed; top: 0; right: 0; bottom: 0; left: 0; display: flex; align-items: center; justify-content: center;
+  color: #000; font-weight: 900; font-size: 30vmin; letter-spacing: .05em; font-family: Arial, Helvetica, sans-serif; }
+/* ?preview in the address: a backdrop so a transparent page can be judged in a browser tab */
+html.preview, html.preview body { background: #1b3a5c; }
+
+/* ---- public layers ---- */
+.frame { position: fixed; top: 0; right: 0; bottom: 0; left: 0; }
+.layer { position: absolute; left: 0; right: 0; box-sizing: border-box; text-align: center;
+  text-shadow: 0 0 .15em #000, 0 .06em .12em #000; }
+.layer.full, .layer.confidence { top: 0; bottom: 0; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; padding: 4vh 6vw; font-size: 6.5vh; line-height: 1.25; }
+.layer.lower { bottom: 4vh; margin: 0 5vw; left: 0; right: 0; padding: 1.5vh 3vw;
+  font-size: 4.6vh; line-height: 1.25; background: rgba(0, 0, 0, .55); border-radius: 1vh; }
+/* the confidence monitor: a plain opaque screen, no shadow, text sized by the theme */
+body.confidence { background: #000; }
+.layer.confidence { background: #000; text-shadow: none; font-size: 11vh; line-height: 1.2; overflow: hidden;
+  padding: 3vh 4vw; }
+.flag-blank { position: fixed; top: 0; right: 0; padding: .2em .8em; background: #b00020; color: #fff;
+  font-size: 2.2vh; font-weight: 700; }
+.textband { max-width: 100%; box-sizing: border-box; padding: 1.5vh 3vw; border-radius: 1vh; }
+.layer img { max-width: 100%; max-height: 100%; object-fit: contain; }
+.layer.image { padding: 0; }
+/* A picture always grows or shrinks to the screen, so a small image no longer leaves a border all round.
+   "fit" keeps the whole picture (bands only where its shape differs), "fill" covers the screen and crops,
+   "stretch" fills it exactly, changing the picture's shape. */
+.layer.image img { width: 100%; height: 100%; max-width: none; max-height: none; object-fit: contain; }
+.layer.image.fit-fill img { object-fit: cover; }
+.layer.image.fit-stretch img { object-fit: fill; }
+.home-pic { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; }
+.home-pic.fill { object-fit: cover; }
+.line { margin: 0; }
+.line.balance { text-wrap: balance; }
+.line.notice-title { font-size: 1.3em; font-weight: 600; margin-bottom: .45em; }
+.line.notice-detail { font-size: .5em; line-height: 1.3; margin-top: .25em; opacity: .92; }
+.num { font-family: var(--num-font, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif); font-size: .55em; vertical-align: super; margin-right: .25em; opacity: .85; }
+.ref { margin-top: .5em; font-size: calc(var(--ref-scale, .6) * 1em); font-weight: 600; opacity: .9; }
+.cont { font-weight: 400; opacity: .8; }
+/* a passage from the verse tray: the title ("John 3") sits above, each line starts "16) " */
+.ref.above { margin: 0 0 .35em; }
+.ref.top { margin: 0 0 .35em; font-size: calc(var(--title-scale, 1.2) * 1em); }
+.num.lead { font-size: 1em; vertical-align: baseline; font-weight: 700; margin-right: 0; opacity: 1; }
+
+/* ---- stage ---- */
+body.stage #root { display: grid; grid-template-columns: 2fr 1fr; grid-template-rows: auto 1fr auto;
+  gap: 2vh 2vw; height: 100%; box-sizing: border-box; padding: 2vh 2vw; font-size: 3.4vh; }
+.bar { grid-column: 1 / -1; display: flex; justify-content: space-between; opacity: .8; font-size: .7em; }
+.flag { background: #b00020; padding: 0 .6em; border-radius: .3em; font-weight: 700; }
+.panel { background: #1e1e1e; border-radius: 1vh; padding: 2vh 2vw; overflow: hidden; }
+.panel h2 { margin: 0 0 .5em; font-size: .6em; text-transform: uppercase; letter-spacing: .08em; opacity: .6; }
+.panel .body { white-space: pre-wrap; }
+.panel.current { grid-row: 2 / 4; font-size: 1.15em; }
+.panel.over { border: .3vh solid #6aa9ff; }
+.panel.notes { color: #ffe58a; }
+.panel.next { opacity: .75; font-size: .8em; }
+.panel img { display: block; width: 100%; max-height: 55vh; object-fit: contain; }
+#status { position: fixed; top: 0; left: 0; padding: .3em .8em; font-size: 2.5vh; background: #b00020;
+  color: #fff; display: none; }
+#status.show.visible { display: block; }
+
+/* ---- countdown and speaker alert (outside #root, so slide changes never redraw them) ----
+   The server sends the look (font, colors, sizes, position); these rules are only the placement and a fallback. */
+.cl-countdown { position: fixed; top: 0; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; padding: 3vh 3vw; box-sizing: border-box; pointer-events: none; text-align: center;
+  text-shadow: 0 0 .15em #000, 0 .06em .12em #000; }
+.cl-countdown[hidden] { display: none; }
+.cl-countdown .cd-box { padding: .5vh 2vw; border-radius: 1vh; }
+.cl-countdown .cd-label { font-weight: 600; margin-bottom: .6vh; }
+.cl-countdown .cd-label:empty { display: none; }
+.cl-countdown .cd-time { font-weight: 700; line-height: 1.05; font-variant-numeric: tabular-nums; }
+.cl-countdown.rect { display: block; padding: 0; }
+.cl-countdown.rect[hidden] { display: none; }
+.cl-countdown.rect .cd-box { position: absolute; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  overflow: hidden; box-sizing: border-box; padding: 0; }
+.cl-countdown.rect .cd-time, .cl-countdown.rect .cd-label { white-space: nowrap; margin: 0; }
+.cl-bar { position: fixed; display: flex; align-items: center; overflow: hidden; box-sizing: border-box; pointer-events: none;
+  font-weight: 700; opacity: 0; }
+.cl-bar[hidden] { display: none; }
+.cl-bar .bar-text { flex: none; white-space: nowrap; will-change: transform; padding: 0 1vw; }
+.cl-countdown.pos-top { justify-content: flex-start; }
+.cl-countdown.pos-bottom { justify-content: flex-end; }
+.cl-countdown.pos-top-left { justify-content: flex-start; align-items: flex-start; }
+.cl-countdown.pos-top-right { justify-content: flex-start; align-items: flex-end; }
+.cl-countdown.pos-bottom-left { justify-content: flex-end; align-items: flex-start; }
+.cl-countdown.pos-bottom-right { justify-content: flex-end; align-items: flex-end; }
+.cl-message { position: fixed; left: 0; right: 0; bottom: 0; padding: 2vh 3vw; background: #ffe58a; color: #000;
+  font-weight: 700; text-align: center; }
+.cl-message.pos-top { top: 0; bottom: auto; }
+
+/* ---- video behind the slide layers (see syncMedia in output.js) ---- */
+#cl-media { position: fixed; top: 0; right: 0; bottom: 0; left: 0; }
+#cl-media video { width: 100%; height: 100%; object-fit: contain; background: transparent; }
+.media-label { position: fixed; top: 0; right: 0; bottom: 0; left: 0; display: flex; align-items: center; justify-content: center;
+  background: rgba(0, 0, 0, .55); color: #fff; font-size: 7vmin; font-weight: 600; text-align: center; padding: 4vmin; }
+.media-hint { position: fixed; bottom: 2vh; left: 50%; transform: translateX(-50%); padding: .5em 1em; background: #000; color: #fff;
+  border-radius: .5em; font-size: 3vh; z-index: 5; cursor: pointer; }
+
+.debug-line { position: fixed; left: .5rem; bottom: .5rem; z-index: 50; white-space: pre; font: 14px/1.3 monospace; color: #fff; background: rgba(0, 0, 0, .6); padding: .2rem .4rem; border-radius: .25rem; pointer-events: none; }
+.debug-line:empty { display: none; }

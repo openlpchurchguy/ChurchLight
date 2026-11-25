@@ -1,0 +1,68 @@
+/* Fonts for the slide themes, bundled so no font has to be installed on the projector or XSplit PC.
+   Written by tools/bundle_fonts.py. Licenses: the OFL-*.txt files in fonts/. */
+@font-face { font-family: "Open Sans"; font-weight: 400; font-style: normal; font-display: swap;
+  src: url("/static/fonts/OpenSans-Regular.ttf") format("truetype"); }
+@font-face { font-family: "Open Sans"; font-weight: 700; font-style: normal; font-display: swap;
+  src: url("/static/fonts/OpenSans-Bold.ttf") format("truetype"); }
+@font-face { font-family: "Lato"; font-weight: 400; font-style: normal; font-display: swap;
+  src: url("/static/fonts/Lato-Regular.ttf") format("truetype"); }
+@font-face { font-family: "Lato"; font-weight: 700; font-style: normal; font-display: swap;
+  src: url("/static/fonts/Lato-Bold.ttf") format("truetype"); }
+@font-face { font-family: "Source Sans 3"; font-weight: 400; font-style: normal; font-display: swap;
+  src: url("/static/fonts/SourceSans3-Regular.ttf") format("truetype"); }
+@font-face { font-family: "Source Sans 3"; font-weight: 700; font-style: normal; font-display: swap;
+  src: url("/static/fonts/SourceSans3-Bold.ttf") format("truetype"); }
+@font-face { font-family: "Roboto"; font-weight: 400; font-style: normal; font-display: swap;
+  src: url("/static/fonts/Roboto-Regular.ttf") format("truetype"); }
+@font-face { font-family: "Roboto"; font-weight: 700; font-style: normal; font-display: swap;
+  src: url("/static/fonts/Roboto-Bold.ttf") format("truetype"); }
+@font-face { font-family: "Nunito"; font-weight: 400; font-style: normal; font-display: swap;
+  src: url("/static/fonts/Nunito-Regular.ttf") format("truetype"); }
+@font-face { font-family: "Nunito"; font-weight: 700; font-style: normal; font-display: swap;
+  src: url("/static/fonts/Nunito-Bold.ttf") format("truetype"); }
+@font-face { font-family: "Montserrat"; font-weight: 400; font-style: normal; font-display: swap;
+  src: url("/static/fonts/Montserrat-Regular.ttf") format("truetype"); }
+@font-face { font-family: "Montserrat"; font-weight: 700; font-style: normal; font-display: swap;
+  src: url("/static/fonts/Montserrat-Bold.ttf") format("truetype"); }
+@font-face { font-family: "Poppins"; font-weight: 400; font-style: normal; font-display: swap;
+  src: url("/static/fonts/Poppins-Regular.ttf") format("truetype"); }
+@font-face { font-family: "Poppins"; font-weight: 700; font-style: normal; font-display: swap;
+  src: url("/static/fonts/Poppins-Bold.ttf") format("truetype"); }
+@font-face { font-family: "Oswald"; font-weight: 400; font-style: normal; font-display: swap;
+  src: url("/static/fonts/Oswald-Regular.ttf") format("truetype"); }
+@font-face { font-family: "Oswald"; font-weight: 700; font-style: normal; font-display: swap;
+  src: url("/static/fonts/Oswald-Bold.ttf") format("truetype"); }
+@font-face { font-family: "Anton"; font-weight: 400; font-style: normal; font-display: swap;
+  src: url("/static/fonts/Anton-Regular.ttf") format("truetype"); }
+@font-face { font-family: "Merriweather"; font-weight: 400; font-style: normal; font-display: swap;
+  src: url("/static/fonts/Merriweather_36pt-Regular.ttf") format("truetype"); }
+@font-face { font-family: "Merriweather"; font-weight: 700; font-style: normal; font-display: swap;
+  src: url("/static/fonts/Merriweather_36pt-Bold.ttf") format("truetype"); }
+@font-face { font-family: "Lora"; font-weight: 400; font-style: normal; font-display: swap;
+  src: url("/static/fonts/Lora-Regular.ttf") format("truetype"); }
+@font-face { font-family: "Lora"; font-weight: 700; font-style: normal; font-display: swap;
+  src: url("/static/fonts/Lora-Bold.ttf") format("truetype"); }
+@font-face { font-family: "Libre Baskerville"; font-weight: 400; font-style: normal; font-display: swap;
+  src: url("/static/fonts/LibreBaskerville-Regular.ttf") format("truetype"); }
+@font-face { font-family: "Libre Baskerville"; font-weight: 700; font-style: normal; font-display: swap;
+  src: url("/static/fonts/LibreBaskerville-Bold.ttf") format("truetype"); }
+@font-face { font-family: "PT Serif"; font-weight: 400; font-style: normal; font-display: swap;
+  src: url("/static/fonts/PTSerif-Regular.ttf") format("truetype"); }
+@font-face { font-family: "PT Serif"; font-weight: 700; font-style: normal; font-display: swap;
+  src: url("/static/fonts/PTSerif-Bold.ttf") format("truetype"); }
+@font-face { font-family: "Playfair Display"; font-weight: 400; font-style: normal; font-display: swap;
+  src: url("/static/fonts/PlayfairDisplay-Regular.ttf") format("truetype"); }
+@font-face { font-family: "Playfair Display"; font-weight: 700; font-style: normal; font-display: swap;
+  src: url("/static/fonts/PlayfairDisplay-Bold.ttf") format("truetype"); }
+@font-face { font-family: "Cinzel"; font-weight: 400; font-style: normal; font-display: swap;
+  src: url("/static/fonts/Cinzel-Regular.ttf") format("truetype"); }
+@font-face { font-family: "Cinzel"; font-weight: 700; font-style: normal; font-display: swap;
+  src: url("/static/fonts/Cinzel-Bold.ttf") format("truetype"); }
+@font-face { font-family: "Dancing Script"; font-weight: 400; font-style: normal; font-display: swap;
+  src: url("/static/fonts/DancingScript-Regular.ttf") format("truetype"); }
+@font-face { font-family: "Dancing Script"; font-weight: 700; font-style: normal; font-display: swap;
+  src: url("/static/fonts/DancingScript-Bold.ttf") format("truetype"); }
+@font-face { font-family: "Atkinson Hyperlegible"; font-weight: 400; font-style: normal; font-display: swap;
+  src: url("/static/fonts/AtkinsonHyperlegible-Regular.ttf") format("truetype"); }
+@font-face { font-family: "Atkinson Hyperlegible"; font-weight: 700; font-style: normal; font-display: swap;
+  src: url("/static/fonts/AtkinsonHyperlegible-Bold.ttf") format("truetype"); }
