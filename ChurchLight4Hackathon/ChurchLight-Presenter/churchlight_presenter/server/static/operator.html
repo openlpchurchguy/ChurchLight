@@ -1,0 +1,1005 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>ChurchLight operator</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="/static/operator.css">
+<script src="/static/look.js"></script>
+</head>
+<body>
+<header class="top">
+  <h1 class="visually-hidden">ChurchLight</h1>
+  <nav class="tabs" aria-label="Pages">
+    <button type="button" id="tab-run" class="tab active" aria-pressed="true">Service</button>
+    <button type="button" id="tab-themes" class="tab" aria-pressed="false">Theme Library</button>
+    <button type="button" id="tab-songs" class="tab" aria-pressed="false">Song Library</button>
+    <button type="button" id="tab-decks" class="tab" aria-pressed="false">Slideshow Library</button>
+    <button type="button" id="tab-media" class="tab" aria-pressed="false">Media Library</button>
+    <button type="button" id="tab-bibles" class="tab" aria-pressed="false">Bible Library</button>
+    <button type="button" id="tab-broadcast" class="tab" aria-pressed="false">Alerts Settings</button>
+    <button type="button" id="tab-shortcuts" class="tab" aria-pressed="false">Settings</button>
+  </nav>
+  <div class="status-chips">
+    <button type="button" id="chip-countdown" class="status-chip" hidden title="A countdown is running. Open the Announcements and timer tab"></button>
+    <button type="button" id="chip-alert" class="status-chip alert" hidden title="An alert is showing on the speaker screens. Open the Announcements and timer tab"></button>
+  </div>
+  <div class="look">
+    <button type="button" id="btn-look" aria-expanded="false" aria-controls="look-panel" title="Light or dark, text size, contrast and color">Appearance</button>
+    <div id="look-panel" class="look-panel" hidden></div>
+  </div>
+  <button type="button" id="shutdown-btn" class="top-shutdown" title="Closes everything ChurchLight started: the screens, the clicker helper, the global keys and the program. Press once, then press again to confirm. Your songs and services are already saved.">Shut down</button>
+  <div id="connection" class="conn" role="status">Connecting…</div>
+</header>
+
+<div id="wizard" class="wizard-back" hidden>
+  <div class="wizard" role="dialog" aria-modal="true" aria-labelledby="wizard-title">
+    <p id="wizard-step" class="muted wizard-step"></p>
+    <h2 id="wizard-title" tabindex="-1"></h2>
+    <p id="wizard-why" class="wizard-why" hidden></p>
+    <div id="wizard-body" class="wizard-body"></div>
+    <div id="wizard-message" class="wizard-note wizard-message" role="alert" hidden><span id="wizard-message-text" class="message-text"></span><button type="button" id="wizard-message-clear" class="message-clear" aria-label="Dismiss this message" title="Dismiss">✕</button></div>
+    <div class="wizard-foot">
+      <button type="button" id="wizard-skip" class="wizard-skip">Skip setup</button>
+      <span class="grow"></span>
+      <button type="button" id="wizard-back">Back</button>
+      <button type="button" id="wizard-next" class="primary">Next</button>
+    </div>
+  </div>
+</div>
+
+<div id="slides-guide" class="wizard-back guide-back" hidden>
+  <div class="wizard slides-guide" role="dialog" aria-modal="true" aria-labelledby="sg-title">
+    <h2 id="sg-title" tabindex="-1">Bringing your slides into ChurchLight</h2>
+    <p class="muted">ChurchLight takes a PDF (or slide pictures). Pick the program you made your slides in.</p>
+    <div class="sg-tabs" role="tablist" aria-label="Slide program">
+      <button type="button" role="tab" id="sg-tab-powerpoint" data-sg="powerpoint" aria-selected="true">PowerPoint</button>
+      <button type="button" role="tab" id="sg-tab-google" data-sg="google" aria-selected="false">Google Slides</button>
+      <button type="button" role="tab" id="sg-tab-keynote" data-sg="keynote" aria-selected="false">Keynote</button>
+      <button type="button" role="tab" id="sg-tab-impress" data-sg="impress" aria-selected="false">LibreOffice Impress</button>
+    </div>
+    <div class="wizard-body sg-body">
+      <section id="sg-powerpoint" role="tabpanel" aria-labelledby="sg-tab-powerpoint" data-sg-panel="powerpoint">
+        <ol>
+          <li>In PowerPoint, press 16:9 first if needed: Design, then Slide Size, then Widescreen (16:9).</li>
+          <li>Choose File, then Export (or Save As), then PDF. On Windows this is Create PDF/XPS Document. On a Mac choose Export, then PDF as the file format.</li>
+          <li>Name it and press Publish (or Save or Export). Look in the options that no hidden slides are left out if you want them.</li>
+          <li>In ChurchLight, go to the Slideshow Library and press Choose a PDF…, then pick the file you just saved.</li>
+        </ol>
+      </section>
+      <section id="sg-google" role="tabpanel" aria-labelledby="sg-tab-google" data-sg-panel="google" hidden>
+        <ol>
+          <li>In Google Slides, check the shape: File, then Page setup, then Widescreen 16:9.</li>
+          <li>Choose File, then Download, then PDF Document (.pdf). The file goes to your Downloads folder.</li>
+          <li>In ChurchLight, go to the Slideshow Library and press Choose a PDF…, then pick that file.</li>
+        </ol>
+        <p class="muted">The PDF has your slides only. Speaker notes are not in it, so type them into ChurchLight (see below).</p>
+      </section>
+      <section id="sg-keynote" role="tabpanel" aria-labelledby="sg-tab-keynote" data-sg-panel="keynote" hidden>
+        <ol>
+          <li>In Keynote, choose File, then Export To, then PDF.</li>
+          <li>Leave the options as they are (each slide gets its own page), press Next, then name it and press Export.</li>
+          <li>In ChurchLight, go to the Slideshow Library and press Choose a PDF…, then pick that file.</li>
+        </ol>
+      </section>
+      <section id="sg-impress" role="tabpanel" aria-labelledby="sg-tab-impress" data-sg-panel="impress" hidden>
+        <ol>
+          <li>In Impress, choose File, then Export As, then Export as PDF….</li>
+          <li>Leave the options as they are and press Export, then name it and save.</li>
+          <li>In ChurchLight, go to the Slideshow Library and press Choose a PDF…, then pick that file.</li>
+        </ol>
+      </section>
+      <h3>What does not come across, and what to do</h3>
+      <ul class="sg-lost">
+        <li><strong>Speaker notes.</strong> A PDF does not carry them. Open the slideshow in the slideshow editor and type each page's notes into its Notes box.</li>
+        <li><strong>Animations, builds and transitions.</strong> Every page becomes one still picture. Use ChurchLight's own transition and timing for the slideshow instead.</li>
+        <li><strong>Videos and sound inside a slide.</strong> They are not kept. Add them in the Media Library and use them next to the slideshow.</li>
+        <li><strong>Hidden slides.</strong> They are usually left out. Show them again in your slide program before you export if you want them.</li>
+        <li><strong>Slide shape.</strong> Set 16:9 before you export so the pictures fill the screen with no side bars.</li>
+        <li><strong>Fonts and colours.</strong> These are kept, because the pages are pictures of your slides.</li>
+        <li><strong>Size.</strong> Very large PDFs can take a while. If one is refused, export again with the smaller or standard size option.</li>
+        <li><strong>No PDF option?</strong> Export the slides as pictures (PNG or JPG) instead, then press Choose slide pictures…. Pictures in order of their file names become the pages.</li>
+      </ul>
+    </div>
+    <div class="wizard-foot">
+      <span class="grow"></span>
+      <button type="button" id="sg-close" class="primary">Close</button>
+    </div>
+  </div>
+</div>
+
+<div id="message" class="message" role="alert" hidden><span id="message-text" class="message-text"></span><button type="button" id="message-undo" class="message-undo" hidden>Undo</button><button type="button" id="message-clear" class="message-clear" aria-label="Dismiss this message" title="Dismiss">✕</button></div>
+<div id="globalkeys-banner" class="banner" hidden>GLOBAL SHORTCUTS ARE ON: the mapped keys work in every program. Turn them off on the Settings tab.</div>
+
+<div id="editor" class="editor-window" role="dialog" aria-labelledby="h-editor" aria-modal="false" hidden>
+  <div class="editor-head">
+    <h2 id="h-editor">New song</h2>
+    <span id="editor-state" class="muted"></span>
+    <button type="button" id="editor-min" title="Shrink to a bar so you can use the rest of the page" aria-label="Minimize the song editor">–</button>
+    <button type="button" id="editor-close" title="Close without saving" aria-label="Close the song editor">✕</button>
+  </div>
+  <div class="stack">
+    <input id="song-title" type="text" maxlength="200" placeholder="Song name (shown on the screens)" aria-label="Song name, shown on the screens">
+    <input id="song-opname" type="text" maxlength="120" placeholder="Operator name, e.g. 123 Amazing Grace (optional, only you see it)" aria-label="Operator name, only the operator sees it">
+    <div class="inline">
+      <input id="song-author" type="text" maxlength="200" placeholder="Author (optional)" aria-label="Song author">
+      <input id="song-ccli" type="text" inputmode="numeric" maxlength="10" placeholder="CCLI song # (optional)" aria-label="CCLI song number">
+    </div>
+    <label class="theme-control song-look"><span class="theme-label">Theme for this song</span>
+      <select id="song-theme" aria-label="Projector theme for this song"></select></label>
+    <textarea id="song-text" rows="12" spellcheck="false" aria-label="Song words"
+      placeholder="Paste the words here, then add a heading such as [Verse 1] or [Chorus] before each part&#10;&#10;[Verse 1]&#10;First line of verse one&#10;Second line&#10;&#10;[Chorus]&#10;First line of the chorus"></textarea>
+    <p class="muted help">Start each part with a heading in square brackets, such as <code>[Verse 1]</code> or <code>[Chorus]</code>.
+      Leave a blank line between parts. Words with no headings at all are split into verses at each blank line.</p>
+    <div class="inline">
+      <input id="song-copyright" type="text" maxlength="300" placeholder="Copyright, e.g. 2010 Hillsong Music (optional)" aria-label="Copyright line for the title slide">
+      <select id="song-notice" aria-label="Title and CCLI slide for this song">
+        <option value="">Title slide: follow Settings</option><option value="before">Title slide: before the song</option>
+        <option value="after">Title slide: after the song</option><option value="never">Title slide: never</option>
+      </select>
+    </div>
+    <label class="order-label" for="song-order">Order the parts are sung (with repeats)</label>
+    <input id="song-order" type="text" maxlength="2000" placeholder="Verse 1, Chorus, Verse 2, Chorus" spellcheck="false">
+    <div id="song-parts" class="chips" hidden></div>
+    <p class="muted help">Leave the order empty to sing each part once, top to bottom. You can skip parts later, for one service, from the service list.</p>
+    <p id="song-check" class="check" role="status"></p>
+    <div class="buttons">
+      <button type="button" id="song-save" class="primary" title="Save as a finished song in the library">Save</button>
+      <button type="button" id="song-save-add" title="Save, then add it to the service after what is live">Save and add to service</button>
+      <button type="button" id="song-save-draft" title="Keep it unfinished. It cannot be used in a service until you publish it">Save as draft</button>
+      <button type="button" id="song-cancel">Cancel</button>
+    </div>
+  </div>
+</div>
+<div id="editor-bar" class="editor-bar" hidden>
+  <span id="editor-bar-text"></span>
+  <button type="button" id="editor-resume" class="primary">Resume</button>
+  <button type="button" id="editor-discard">Discard</button>
+</div>
+
+<main class="landing" id="landing" hidden>
+  <section class="col">
+    <h2>Start</h2>
+    <p class="muted">Open a service to run it, or start a new one. Songs, slideshows and Bibles are added and edited on their own Library tabs.</p>
+    <details id="ready" class="settings-fold ready-fold ready-checking">
+      <summary><h3 id="ready-title">Ready to start?</h3><span id="ready-headline" class="ready-headline" role="status">Checking…</span></summary>
+      <ul id="ready-list" class="ready-list"></ul>
+      <div class="buttons"><button type="button" id="ready-again">Check again</button></div>
+    </details>
+    <form id="landing-form" class="inline">
+      <input id="landing-name" type="text" maxlength="200" placeholder="New service name" aria-label="New service name">
+      <button type="submit" class="primary">Start new service</button>
+    </form>
+    <p class="muted">Just want to try it out? <button type="button" id="landing-practice">Make a practice service</button></p>
+    <h3>Open an earlier service</h3>
+    <ul id="landing-list" class="list"></ul>
+    <div class="buttons">
+      <button type="button" id="landing-songs">Song Library</button>
+      <button type="button" id="landing-decks">Slideshow Library</button>
+      <button type="button" id="landing-bibles">Bible Library</button>
+    </div>
+  </section>
+</main>
+
+<main class="board" id="view-run">
+  <div class="run-toolbar" id="run-toolbar" role="toolbar" aria-label="Live controls">
+      <button type="button" id="btn-previous" class="big">◀ Previous</button>
+      <button type="button" id="btn-next" class="big primary">Next ▶</button>
+      <button type="button" id="btn-fold-items" title="Close the drop-down lists of every service item, or open them all again">Collapse items</button>
+      <button type="button" id="btn-blank">Blank screens</button>
+      <button type="button" id="btn-words">Hide words</button>
+      <button type="button" id="btn-lower" title="Take the lower thirds off the air without blanking the projector">Hide lower third</button>
+      <button type="button" id="btn-clear-verse" title="Take only the verse off the screen. The slide under it stays" hidden>Clear verse</button>
+      <button type="button" id="btn-clear">Clear live</button>
+      <button type="button" id="btn-clicker" hidden title="Start or stop the clicker helper (Windows). Set up its buttons in Settings">Clicker: off</button>
+    <div class="live-title" aria-live="polite"><b id="live-title">Nothing live</b>
+      <small><span id="position">Nothing live</span> <span id="mode" class="muted"></span></small></div>
+  </div>
+  <section class="col service" data-panel="service" aria-labelledby="h-service">
+    <div class="inline service-head">
+      <h2 id="h-service">Service order</h2>
+    </div>
+    <div class="service-strip">
+      <span id="service-title" class="muted grow">No service open</span>
+      <span class="mode-toggle" role="group" aria-label="Plan the service or run it">
+        <button type="button" id="mode-plan" aria-pressed="true" title="Plan: search the library, add and arrange items">Plan</button>
+        <button type="button" id="mode-run" aria-pressed="false" title="Run: only the service order, so the jump buttons have room">Run</button>
+      </span>
+      <button type="button" id="report-btn" title="Add this service's songs to the song report. Press it, then press Sure? to confirm. The list is on the Song Library tab">Report</button>
+      <button type="button" id="service-settings-btn" aria-expanded="false" aria-controls="service-settings">Change</button>
+    </div>
+    <div id="service-settings" class="service-settings" hidden>
+      <div class="service-bar">
+        <label>Service
+          <select id="service-select" aria-label="Open a service"></select>
+        </label>
+        <form id="new-service-form" class="inline">
+          <input id="new-service-name" type="text" maxlength="200" placeholder="New service name" aria-label="New service name">
+          <button type="submit">Start new</button>
+        </form>
+      </div>
+      <label class="theme-control service-look"><span class="theme-label">Projector theme for this service</span>
+        <select id="service-theme" aria-label="Projector theme for this service"></select></label>
+      <label class="theme-control service-look"><span class="theme-label">Overlay theme for this service</span>
+        <select id="service-overlay-theme" aria-label="Overlay theme for this service"></select></label>
+      <label class="theme-control service-look"><span class="theme-label">Bible verses on each slide</span>
+        <select id="service-verse-split" aria-label="How Bible verses are split into slides for this service">
+          <option value="">Follow the theme</option>
+          <option value="verse">One verse per slide</option>
+          <option value="chars">Fit as many whole verses as will fit</option>
+        </select></label>
+    </div>
+    <div class="library-box" id="library-box">
+      <div class="inline search-line">
+        <select id="search-kind" aria-label="Show everything, or only songs, slideshows, pictures, videos or sound" title="Show everything, or only one kind">
+          <option value="">All</option><option value="song">Songs</option><option value="presentation">Slideshows</option>
+          <option value="image">Pictures</option><option value="video">Videos</option><option value="audio">Sound</option>
+        </select>
+        <input id="search" type="search" maxlength="200" placeholder="Search songs, slideshows and media   ( / )" aria-label="Search songs, slideshows, pictures, videos and sound" autocomplete="off">
+        <button type="button" id="search-clear" title="Clear the search ( Esc in the box )" hidden>Clear</button>
+        <button type="button" id="search-all" title="List everything of the kind chosen">Show all</button>
+        <button type="button" id="new-song-run" title="Write a new song without leaving this page">New song</button>
+      </div>
+      <label class="check results-switch"><input type="checkbox" id="results-switch" checked> Show results under the search box</label>
+      <ul id="results" class="list"></ul>
+      <ul id="preview-home" class="list" hidden>
+        <li id="preview" class="preview" hidden>
+          <h3 id="preview-title"></h3>
+          <ol id="preview-slides"></ol>
+          <button type="button" id="preview-close">Close preview</button>
+        </li>
+      </ul>
+      <details class="add-other">
+        <summary>Add a Bible reference</summary>
+        <form id="add-verse-form" class="inline">
+          <input id="add-verse-text" type="text" maxlength="200" placeholder="John 3:16" aria-label="Bible reference to add">
+          <button type="submit">Add verse</button>
+        </form>
+      </details>
+    </div>
+    <ol id="items" class="list items"></ol>
+  </section>
+
+  <section class="col live" data-panel="live" aria-labelledby="h-live">
+    <h2 id="h-live">Live</h2>
+    <div class="live-preview">
+      <div class="live-slots">
+        <div class="live-slot">
+          <select id="live-output" aria-label="Which output to show in the first live preview"></select>
+          <figure class="frame-box live-frame" id="live-frame" hidden></figure>
+        </div>
+        <div class="live-slot">
+          <select id="live-output-2" aria-label="Which output to show in the second live preview"></select>
+          <figure class="frame-box live-frame" id="live-frame-2" hidden></figure>
+        </div>
+      </div>
+      <p id="live-text" class="muted live-text"></p>
+    </div>
+    <p id="timer-line" class="timer-line" hidden><span id="timer-text"></span>
+      <button type="button" id="btn-timer">Pause timer</button></p>
+    <div class="clip-panel" id="clip-panel" hidden>
+      <div class="clip-block" id="clip-live" hidden>
+        <h3 id="clip-live-title">Playing now</h3>
+        <p id="clip-problem" class="clip-problem" role="alert" hidden></p>
+        <div class="clip-row">
+          <button type="button" id="clip-play" class="primary">Pause</button>
+          <button type="button" id="clip-restart">Start again</button>
+          <input type="range" id="clip-seek" min="0" max="1000" value="0" aria-label="Where the video or sound is">
+          <span id="clip-time" class="muted"></span>
+        </div>
+        <div class="clip-row">
+          <label class="check">Volume <input type="range" id="clip-volume" min="0" max="100" value="100" aria-label="Volume of the video or sound"></label>
+          <button type="button" id="clip-mute" aria-pressed="false">Mute</button>
+          <label class="check"><input type="checkbox" id="clip-loop"> Play it again and again</label>
+          <label class="check"><input type="checkbox" id="clip-advance"> Go to the next item when it ends</label>
+        </div>
+      </div>
+      <div class="clip-block" id="clip-music" hidden>
+        <h3 id="clip-music-title">Music under the slides</h3>
+        <div class="clip-row">
+          <button type="button" id="music-play" class="primary">Pause</button>
+          <button type="button" id="music-restart">Start again</button>
+          <button type="button" id="music-stop">Stop the music</button>
+          <input type="range" id="music-seek" min="0" max="1000" value="0" aria-label="Where the music is">
+          <span id="music-time" class="muted"></span>
+        </div>
+        <div class="clip-row">
+          <label class="check">Volume <input type="range" id="music-volume" min="0" max="100" value="100" aria-label="Volume of the music"></label>
+          <button type="button" id="music-mute" aria-pressed="false">Mute</button>
+          <label class="check"><input type="checkbox" id="music-loop"> Play it again and again</label>
+        </div>
+      </div>
+      <div class="clip-block" id="clip-page" hidden>
+        <h3 id="clip-page-title">Sound with this slide</h3>
+        <div class="clip-row">
+          <button type="button" id="page-play" class="primary">Pause</button>
+          <button type="button" id="page-restart">Start again</button>
+          <label class="check"><input type="checkbox" id="page-loop"> Play it again and again</label>
+          <span id="page-time" class="muted"></span>
+        </div>
+        <div class="clip-row">
+          <label class="check">Volume <input type="range" id="page-volume" min="0" max="100" value="100" aria-label="Volume of the slide's sound"></label>
+          <button type="button" id="page-mute" aria-pressed="false">Mute</button>
+        </div>
+      </div>
+      <p class="muted" id="clip-where"></p>
+    </div>
+
+  </section>
+
+  <section class="run-bottom" id="run-bottom" data-panel="tray" aria-label="Bible, announcements and timer">
+    <div class="rb-resize" id="rb-resize" role="separator" aria-orientation="horizontal" tabindex="0" title="Drag to resize the tools panel ( or use the up and down arrows )"></div>
+    <div class="rb-tabs" role="tablist" aria-label="Tools">
+      <button type="button" role="tab" id="rb-tab-bible" class="rb-tab" data-pane="bible" aria-selected="true" aria-controls="rb-bible">Bible</button>
+      <button type="button" role="tab" id="rb-tab-announce" class="rb-tab" data-pane="announce" aria-selected="false" aria-controls="rb-announce">Announcements and timer</button>
+      <button type="button" id="rb-collapse" class="rb-collapse" aria-expanded="true" aria-controls="rb-bible rb-announce" title="Fold the tools panel down to its tab row">Fold ▾</button>
+    </div>
+    <div id="rb-bible" class="rb-pane" role="tabpanel" aria-labelledby="rb-tab-bible">
+      <h2 id="h-tray">Verse tray</h2>
+    <form id="tray-form" class="inline">
+      <input id="tray-text" type="text" maxlength="200" placeholder="John 3   or   John 3:1-21   ( T )   Ctrl+Enter adds it to the service" aria-label="Chapter or verses to load into the tray" autocomplete="off">
+      <button type="submit">Load</button>
+      <button type="button" id="tray-load-add" title="Load the passage and add all of it to the service ( Ctrl+Enter )">Load + add to service</button>
+      <button type="button" id="tray-clear">Clear tray</button>
+    </form>
+    <p id="tray-hint" class="muted hint" role="status"></p>
+    <p id="tray-empty" class="muted">Load a chapter to pick verses from. Nothing goes on screen until you press Show. It uses the Bible set as the default in the Library tab.</p>
+    <div id="tray-body" hidden>
+      <p id="tray-title" class="status-line"></p>
+      <div class="inline jump">
+        <label for="tray-jump">Go to verse</label>
+        <input id="tray-jump" type="text" inputmode="numeric" maxlength="60" placeholder="16   or   16-18   or   16, 18   ( G )" autocomplete="off" aria-describedby="tray-jump-note">
+        <span id="tray-jump-note" class="muted" role="status"></span>
+      </div>
+      <p id="tray-ready" class="status-line ready-line" role="status" hidden></p>
+      <p class="muted help jump-help">Typing marks verses. Enter adds them to the service and makes them Ready (one verse also adds the rest of the chapter after it) without changing the screens. Enter again puts them on screen in place of what is showing. Shift+Enter does both at once. Esc clears Ready.</p>
+      <div class="buttons">
+        <button type="button" id="tray-show-checked" title="Put the ticked verses over the slideshow slide that is live" hidden>Show over slideshow</button>
+        <button type="button" id="tray-add-checked" title="Add the ticked verses to the service order; nothing changes on screen">Add to service</button>
+        <button type="button" id="tray-add-all" title="Add the whole passage to the service order">Add whole passage to service</button>
+      </div>
+      <div class="buttons">
+        <button type="button" id="tray-prev" title="Previous verse ( , )">◀ Verse</button>
+        <button type="button" id="tray-next" title="Next verse ( . )">Verse ▶</button>
+        <button type="button" id="tray-uncheck">Clear checks</button>
+      </div>
+      <ol id="tray-list" class="list tray-list"></ol>
+      <p class="muted help">Click a verse to show it live, or press + to add just that verse to the service. Tick several (Shift-click ticks a run), then Show live or Add to service. The title stays "book chapter" and each verse starts with its number.</p>
+    </div>
+    </div>
+    <div id="rb-announce" class="rb-pane" role="tabpanel" aria-labelledby="rb-tab-announce" hidden>
+      <div class="rb-split">
+        <section class="rb-half" aria-labelledby="h-announce">
+          <h2 id="h-announce">Announcements</h2>
+          <p class="muted">Write an announcement slide and add it to the service. It is added after the live item, or at the end.</p>
+          <form id="add-announcement-form" class="stack">
+            <input id="ann-title" type="text" maxlength="200" placeholder="Title (optional; the text's first line is used if empty)" aria-label="Announcement title">
+            <textarea id="ann-body" rows="3" maxlength="5000" placeholder="Text on screen" aria-label="Announcement text"></textarea>
+            <button type="submit">Add announcement</button>
+          </form>
+        </section>
+        <section class="rb-half" aria-labelledby="h-timer">
+          <h2 id="h-timer">Timer</h2>
+          <p class="muted">A countdown shows on the projector (as a big clock or a scrolling bar) and small in the corner of the speaker screens, never on the lower thirds. It ends by itself. How it looks is set on the Alerts Settings tab.</p>
+          <div class="buttons">
+            <label>Count down to <input type="time" id="cd-at" aria-label="Clock time to count down to"></label>
+            <button type="button" id="cd-start-at">Start</button>
+            <label>or for <input type="number" id="cd-minutes" min="1" max="1440" value="5" aria-label="Minutes to count down"> minutes</label>
+            <button type="button" id="cd-start-min">Start</button>
+          </div>
+          <div class="buttons">
+            <label id="cd-label-line">Words above it <input type="text" id="cd-label" maxlength="80" placeholder="Service begins in" aria-label="Words shown above the countdown"></label>
+            <label id="cd-bar-line" hidden>What the bar says <input type="text" id="cd-bar-text" maxlength="120" placeholder="{minutes} until service begins" aria-label="Words the scrolling bar shows" title="{minutes} becomes 10 minutes, 9 minutes ... 1 minute. Leave empty and the bar says nothing. Saves when you press Enter or click away; it is the same words as on the Alerts Settings tab."></label>
+            <label id="cd-zero-line" hidden>When it reaches zero <input type="text" id="cd-zero-text" maxlength="120" placeholder="Service is beginning" aria-label="Words the scrolling bar shows when the time reaches zero" title="Leave empty and the bar says nothing at zero. Saves when you press Enter or click away; it is the same words as on the Alerts Settings tab."></label>
+            <button type="button" id="cd-stop">Stop countdown</button>
+          </div>
+          <div class="buttons">
+            <label>On the projector show
+              <select id="cd-mode" aria-label="How the countdown shows on the projector">
+                <option value="clock">A big clock</option>
+                <option value="bar">A scrolling bar</option>
+              </select></label>
+            <button type="button" id="cd-look" title="Open the editor on the Alerts Settings tab">Change how it looks</button>
+          </div>
+          <p id="cd-status" class="muted"></p>
+          <div class="buttons">
+            <label>Alert for the speaker and band <input type="text" id="alert-text" maxlength="140" placeholder="Wrap up in 2 minutes" aria-label="Alert shown on the stage and confidence screens only"></label>
+            <button type="button" id="alert-send">Send alert</button>
+            <button type="button" id="alert-clear">Clear alert</button>
+          </div>
+          <p id="alert-status" class="muted"></p>
+        </section>
+      </div>
+    </div>
+  </section>
+</main>
+
+<main class="themes" id="view-themes" hidden>
+  <section class="col theme-main" aria-labelledby="h-theme-edit">
+    <div class="inline theme-title"><h2 id="h-theme-edit">Edit theme</h2><button type="button" id="theme-new" class="primary">New theme</button></div>
+    <p id="theme-empty" class="muted">Choose a theme on the left to edit it, or press New theme.</p>
+    <div id="theme-editor" hidden>
+      <label class="theme-control theme-kind-row"><span class="theme-label">What output is this theme for?</span>
+        <select id="theme-kind"></select></label>
+      <p id="theme-kind-help" class="muted"></p>
+      <div class="inline theme-head">
+        <input id="theme-name" type="text" maxlength="80" aria-label="Theme name" placeholder="Theme name">
+        <button type="button" id="theme-save" class="primary">Save</button>
+        <button type="button" id="theme-revert">Revert</button>
+        <button type="button" id="theme-dup">Duplicate</button>
+        <button type="button" id="theme-del" class="danger">Delete</button>
+        <span id="theme-state" class="muted" role="status"></span>
+      </div>
+      <details open><summary>Text</summary><div id="theme-group-text" class="theme-group"></div></details>
+      <details open><summary>Where the box sits</summary><div id="theme-group-place" class="theme-group"></div></details>
+      <details open><summary>Backgrounds</summary><div id="theme-group-background" class="theme-group"></div></details>
+      <details open><summary>Bible verses</summary><div id="theme-group-bible" class="theme-group"></div></details>
+      <details open><summary>Songs</summary><div id="theme-group-songs" class="theme-group"></div></details>
+    </div>
+  </section>
+  <section class="col theme-preview" aria-labelledby="h-theme-preview">
+    <h2 id="h-theme-preview">Preview</h2>
+    <p class="muted">Changes show here straight away and reach the screens only when you press Save.</p>
+    <div class="buttons theme-samples" id="theme-samples"></div>
+    <p id="theme-preview-off" class="muted" hidden>There are no screens set up, so there is nothing to preview on.</p>
+    <div class="frame-view theme-frame-box"><iframe id="theme-frame" title="Theme preview" tabindex="-1"></iframe>
+      <div id="theme-guide" class="theme-guide" hidden>
+        <div id="theme-guide-box" class="guide-box">
+          <span class="guide-handle" data-edge="top" tabindex="0" role="slider" aria-label="Top edge of the text area"></span>
+          <span class="guide-handle" data-edge="bottom" tabindex="0" role="slider" aria-label="Bottom edge of the text area"></span>
+          <span class="guide-handle" data-edge="left" tabindex="0" role="slider" aria-label="Left edge of the text area"></span>
+          <span class="guide-handle" data-edge="right" tabindex="0" role="slider" aria-label="Right edge of the text area"></span>
+        </div>
+      </div>
+    </div>
+    <p id="theme-guide-line" class="muted guide-hint" hidden>The dashed box is the space the text may use. Drag an edge, or use the sliders on the left. On an overlay, the edge next to where the box sits moves the box; the other edges resize it.</p>
+  </section>
+  <section class="theme-side" aria-label="Choose a theme">
+    <div class="theme-cols">
+      <div class="theme-assign" aria-labelledby="h-assign">
+        <h2 id="h-assign">Where themes are used</h2>
+        <label class="theme-control"><span class="theme-label">New services start with (projector)</span>
+          <select id="assign-default"></select></label>
+        <label class="theme-control"><span class="theme-label">New services start with (overlay)</span>
+          <select id="assign-default-overlay"></select></label>
+        <label class="theme-control"><span class="theme-label">Bible verses on the projector use</span>
+          <select id="assign-bible"></select></label>
+        <label class="theme-control"><span class="theme-label">A verse over a slideshow uses</span>
+          <select id="assign-verse-over"></select></label>
+        <label class="theme-control"><span class="theme-label">Confidence monitor uses</span>
+          <select id="assign-confidence"></select></label>
+        <details class="theme-help"><summary>How these work</summary>        <p class="muted">The projector and overlay themes are chosen for each service (and can be swapped for one item) on the Service tab. The confidence monitor has one look for everything. The Bible theme and the verse-over-a-slideshow theme style verses on the projector only. A theme picked on one item always wins.</p></details>
+      </div>
+      <div class="theme-browse" aria-labelledby="h-browse">
+        <h2 id="h-browse">Themes to edit</h2>
+        <div class="inline theme-find">
+          <label class="theme-find-kind"><span class="theme-label">Show</span> <select id="theme-show"></select></label>
+          <input id="theme-filter" type="search" maxlength="60" placeholder="Filter by name" aria-label="Filter themes by name">
+        </div>
+        <ul id="theme-list" class="list theme-list"></ul>
+      </div>
+    </div>
+  </section>
+</main>
+
+<main class="grid lib lib-view" id="view-songs" hidden>
+  <div class="stack-col">
+    <section class="col" aria-labelledby="h-import-songs">
+      <h2 id="h-import-songs">Add songs</h2>
+      <p id="import-off-songs" class="muted import-off" hidden>Importing is off because the program was started without a media folder. Start it with <code>--media media</code>.</p>
+      <div class="import-controls" data-view="songs">
+        <div class="import-block">
+          
+          <p class="muted">Plain text <code>.txt</code> (a CCLI SongSelect lyrics download works), OpenLyrics <code>.xml</code> (an OpenLP export), OpenSong files (no extension), or ChordPro <code>.cho</code>. Chords are dropped. Choose many at once. Use songs your church is licensed to project.</p>
+          <button type="button" id="pick-songs">Choose song files…</button>
+          <input type="file" id="file-songs" multiple hidden>
+        </div>
+        <p id="import-status-songs" class="muted" role="status"></p>
+      </div>
+      <h3>Recent imports</h3>
+      <ul id="import-jobs-songs" class="list import-jobs" data-kind="songs"><li class="muted">Nothing imported yet</li></ul>
+    </section>
+  </div>
+
+  <div class="stack-col wide">
+    <section class="col" data-fold="songs" aria-labelledby="h-songs">
+      <h2 id="h-songs">Songs</h2>
+      <div class="inline">
+        <input id="song-filter" type="search" placeholder="Filter songs" aria-label="Filter songs" autocomplete="off">
+        <button type="button" id="new-song" class="primary">New song</button>
+        <button type="button" id="song-select-toggle" aria-pressed="false" title="Tick several songs, then delete them together">Select several</button>
+      </div>
+      <div id="song-select-bar" class="inline select-bar" hidden></div>
+      <form id="church-ccli-form" class="inline">
+        <label for="church-ccli" class="muted">Church CCLI license number</label>
+        <input id="church-ccli" type="text" inputmode="numeric" maxlength="12" placeholder="Stored once for the whole church">
+        <button type="submit">Save</button>
+      </form>
+      <div class="inline export-line">
+        <label>Export as
+          <select id="song-export-format" aria-label="File type for exported songs">
+            <option value="xml">XML (OpenLyrics, for other programs)</option>
+            <option value="txt">Text (to email or print)</option>
+          </select></label>
+        <button type="button" id="song-export-all" title="Save every finished song in one .zip file">Export all songs</button>
+        <button type="button" id="report-list-btn" aria-expanded="false" aria-controls="report-panel" title="The songs reported from your services">Report list</button>
+      </div>
+    <div id="report-panel" class="report-panel" hidden>
+      <p class="muted">One running list of the songs used. Each Report adds a section with the service name and date; reporting the same service again updates its section.</p>
+      <div id="report-sections"></div>
+      <p id="report-empty" class="muted" hidden>Nothing has been reported yet. Open a service and press Report.</p>
+      <div class="buttons"><button type="button" id="report-copy-all">Copy the whole list</button><button type="button" id="usage-download" title="The automatic log of every song that went live, as a file CCLI accepts">Download the usage log</button><span id="report-copy-hint" class="muted"></span></div>
+    </div>
+      <ul id="song-list" class="list"></ul>
+    </section>
+
+
+    <section class="col" data-fold="drafts" aria-labelledby="h-drafts">
+      <h2 id="h-drafts">Drafts</h2>
+      <p class="muted help">Unfinished songs. They never appear in the Service tab search and cannot go in a service until you Publish them.</p>
+      <ul id="draft-list" class="list"></ul>
+    </section>
+
+
+  </div>
+</main>
+
+<main class="grid lib lib-view" id="view-decks" hidden>
+  <div class="stack-col">
+    <section class="col" aria-labelledby="h-import-decks">
+      <h2 id="h-import-decks">Add a slideshow</h2>
+      <p id="import-off-decks" class="muted import-off" hidden>Importing is off because the program was started without a media folder. Start it with <code>--media media</code>.</p>
+      <div class="import-controls" data-view="decks">
+        <div class="import-block">
+          
+          <p class="muted">A PDF, or exported slide pictures. Have a PowerPoint? Export it to PDF first (File, then Save As or Export, then PDF).</p>
+          <p><button type="button" id="sg-open" title="Step by step for PowerPoint, Google Slides, Keynote and Impress">How do I get my slides in?</button></p>
+          <input id="deck-name" type="text" maxlength="200" placeholder="Name in the library (optional)" aria-label="Name of the slideshow">
+          <div class="buttons">
+            <button type="button" id="pick-deck">Choose a PDF…</button>
+            <button type="button" id="pick-pictures">Choose slide pictures…</button>
+            <button type="button" id="pick-bundle" title="A .zip made by Export on another ChurchLight computer">Choose an exported bundle…</button>
+          </div>
+          <input type="file" id="file-deck" accept=".pdf" multiple hidden>
+          <input type="file" id="file-bundle" accept=".zip" hidden>
+          <input type="file" id="file-pictures" accept=".png,.jpg,.jpeg,.gif,.webp,image/*" multiple hidden>
+        </div>
+        <p id="import-status-decks" class="muted" role="status"></p>
+      </div>
+      <h3>Recent imports</h3>
+      <ul id="import-jobs-decks" class="list import-jobs" data-kind="deck"><li class="muted">Nothing imported yet</li></ul>
+    </section>
+  </div>
+
+  <div class="stack-col wide">
+    <section class="col" data-fold="decks" aria-labelledby="h-decks">
+      <h2 id="h-decks">Slideshows</h2>
+      <div class="inline export-line">
+        <button type="button" id="deck-export-all" title="Save every slideshow, with pictures and settings, in one .zip bundle">Export all slideshows</button>
+        <button type="button" id="deck-select-toggle" aria-pressed="false" title="Tick several slideshows, then delete them together">Select several</button>
+        <span class="muted">A bundle keeps the page order, notes, timing and picture size. Add it on the other computer with "Choose an exported bundle…".</span>
+      </div>
+      <div id="deck-select-bar" class="inline select-bar" hidden></div>
+      <div class="inline">
+        <input id="deck-filter" type="search" placeholder="Filter slideshows" aria-label="Filter slideshows" autocomplete="off">
+      </div>
+      <ul id="deck-list" class="list"></ul>
+    </section>
+
+
+  </div>
+</main>
+
+<main class="deckedit" id="view-deckedit" hidden>
+  <div class="inline theme-title de-head">
+    <button type="button" id="de-back" class="primary">← Back to Slideshow Library</button>
+    <h2 id="de-title">Edit slideshow</h2>
+    <button type="button" id="de-rename" title="Change the name of this slideshow">Rename</button>
+    <span id="de-rename-box" class="inline" hidden>
+      <input id="de-rename-input" type="text" maxlength="200" aria-label="New name for this slideshow">
+      <button type="button" id="de-rename-save" class="primary">Save name</button>
+      <button type="button" id="de-rename-cancel">Cancel</button>
+    </span>
+    <span id="de-used" class="muted"></span>
+  </div>
+  <p id="de-live" class="banner" hidden>This slideshow is live right now, so it cannot be changed. Clear it, or move to another item, and it unlocks.</p>
+  <div class="de-body">
+    <section class="col de-main" aria-labelledby="h-de-slides">
+      <h2 id="h-de-slides">Slides <span id="de-count" class="muted"></span></h2>
+      <div class="de-toolbar buttons de-bring" role="toolbar" aria-label="Bring slides into this slideshow">
+        <button type="button" id="de-add" class="primary" title="Add pictures after the selected slide, or at the end">Add pictures</button>
+        <button type="button" id="de-all" class="primary" title="Select every slide">Select all</button>
+        <details class="de-menu" id="de-menu-from">
+          <summary>Add from ▾</summary>
+          <div class="de-menu-list">
+            <button type="button" id="de-library-open" title="Add pictures or videos you already have in the Media Library, after the selected slide or at the end">Media Library…</button>
+            <button type="button" id="de-from-open" title="Copy slides from another slideshow into this one">Another slideshow…</button>
+          </div>
+        </details>
+        <details class="de-menu" id="de-menu-replace">
+          <summary>Replace ▾</summary>
+          <div class="de-menu-list">
+            <button type="button" id="de-replace" title="Give the selected slide a different picture; its place and notes stay">A picture…</button>
+            <button type="button" id="de-pdf" title="Choose a new PDF: its pages replace the slides of this slideshow, slide by slide (titles, notes and timing stay)">From a PDF…</button>
+          </div>
+        </details>
+        <span id="de-status" class="muted" role="status"></span>
+        <input type="file" id="de-add-file" accept=".png,.jpg,.jpeg,.gif,.webp,image/png,image/jpeg,image/gif,image/webp" multiple hidden>
+        <input type="file" id="de-pdf-file" accept=".pdf,application/pdf" hidden>
+        <input type="file" id="de-replace-file" accept=".png,.jpg,.jpeg,.gif,.webp,image/png,image/jpeg,image/gif,image/webp" hidden>
+      </div>
+      <div id="de-selbar" class="de-toolbar de-selbar buttons" role="toolbar" aria-label="Change the selected slides">
+        <span id="de-sel-label" class="de-sel-label">Selected slides: none yet. Click a slide to select it.</span>
+        <button type="button" id="de-left" class="de-arrow" aria-label="Move earlier" title="Move earlier">←</button>
+        <button type="button" id="de-right" class="de-arrow" aria-label="Move later" title="Move later">→</button>
+        <button type="button" id="de-duplicate" title="Copy the selected slides, each right after its original">Duplicate</button>
+        <button type="button" id="de-skip" title="A skipped slide stays in the slideshow but is passed over when the slideshow runs">Skip</button>
+        <button type="button" id="de-tomedia" title="Copy the pictures of the selected slides into the Media Library; this slideshow is not changed">Add to the Media Library</button>
+        <button type="button" id="de-split-open" title="Make a new slideshow from the selected slides; this slideshow is not changed">Make a new slideshow from selected…</button>
+        <span class="grow"></span>
+        <button type="button" id="de-delete" class="danger" title="Remove the selected slides from this slideshow">Delete</button>
+      </div>
+      <div id="de-pdfpanel" class="de-panel" hidden>
+        <p id="de-pdf-summary" role="status"></p>
+        <div id="de-pdf-changed" hidden>
+          <div class="inline">
+            <strong>Slides that look different</strong>
+            <button type="button" id="de-pdf-change-all">Use all New</button>
+            <button type="button" id="de-pdf-keep-all">Use all Old</button>
+          </div>
+          <ul id="de-pdf-list" class="de-replace-list" aria-label="Slides that look different"></ul>
+        </div>
+        <div id="de-pdf-same-line" class="inline" hidden>
+          <label for="de-pdf-same" id="de-pdf-same-label">Slides that look identical</label>
+          <select id="de-pdf-same">
+            <option value="leave">Old (leave them as they are)</option>
+            <option value="replace">New (replace them with the new pages)</option>
+          </select>
+        </div>
+        <label class="check" id="de-pdf-extra-line" hidden><input type="checkbox" id="de-pdf-extra"> <span id="de-pdf-extra-text"></span></label>
+        <div class="inline">
+          <button type="button" id="de-pdf-apply" class="primary">Replace the slides</button>
+          <button type="button" id="de-pdf-cancel">Cancel</button>
+        </div>
+        <p class="muted de-help">Page 1 of the PDF replaces slide 1, page 2 replaces slide 2, and so on. Only the pictures change: each slide keeps its title, notes, skip setting, timing and transition.</p>
+      </div>
+      <div id="de-from" class="de-panel" hidden>
+        <div class="inline">
+          <label for="de-from-deck">Copy slides from</label>
+          <select id="de-from-deck"></select>
+          <button type="button" id="de-from-all">Select all</button>
+          <button type="button" id="de-from-add" class="primary">Add</button>
+          <button type="button" id="de-from-cancel">Cancel</button>
+        </div>
+        <p class="muted de-help">Click slides to choose them. They are copied after the selected slide in this slideshow (or at the end); the other slideshow is not changed.</p>
+        <ul id="de-from-grid" class="de-grid small" aria-label="Slides in the other slideshow"></ul>
+      </div>
+      <div id="de-library" class="de-panel" hidden>
+        <p>Choose pictures and videos from the Media Library. They are added after the selected slide, or at the end.</p>
+        <input id="de-library-filter" type="search" placeholder="Filter files" aria-label="Filter the Media Library files" autocomplete="off">
+        <ul id="de-library-grid" class="de-grid small" aria-label="Files in the Media Library"></ul>
+        <div class="inline">
+          <button type="button" id="de-library-add" class="primary">Add</button>
+          <button type="button" id="de-library-cancel">Cancel</button>
+        </div>
+      </div>
+      <div id="de-split" class="de-panel" hidden>
+        <div class="inline">
+          <label for="de-split-name">Name of the new slideshow</label>
+          <input id="de-split-name" type="text" maxlength="200">
+          <button type="button" id="de-split-create" class="primary">Create slideshow</button>
+          <button type="button" id="de-split-cancel">Cancel</button>
+        </div>
+      </div>
+      <p class="muted de-help">Click a slide to select it. Ctrl-click adds one, Shift-click selects a range. Drag the selected slides to move them.</p>
+      <ul id="de-grid" class="de-grid" aria-label="Slides in this slideshow"></ul>
+    </section>
+    <section class="col de-side" aria-labelledby="h-de-side">
+      <h2 id="h-de-side">Selected slide</h2>
+      <div id="de-preview-box" class="de-preview"><img id="de-preview" alt="" hidden><span id="de-preview-empty" class="muted">Select a slide</span></div>
+      <p id="de-side-label" class="muted"></p>
+      <label for="de-slide-title">Slide title</label>
+      <input type="text" id="de-slide-title" maxlength="60" placeholder="Slide name, such as Offering (shows in the Live panel and lists)">
+      <label for="de-notes">Speaker notes</label>
+      <textarea id="de-notes" rows="6" maxlength="5000" placeholder="Notes for the operator. They never show on the screens."></textarea>
+      <div class="buttons"><button type="button" id="de-notes-save">Save notes</button><span id="de-notes-hint" class="muted"></span></div>
+      <h3 id="h-de-sound">Sound</h3>
+      <p id="de-sound-for" class="muted de-help"></p>
+      <label class="check" id="de-mute-line"><input type="checkbox" id="de-video-mute"> Play the video without its own sound</label>
+      <label for="de-sound-select">Sound file that plays with the selected slides</label>
+      <div class="inline">
+        <select id="de-sound-select"></select>
+        <label class="check"><input type="checkbox" id="de-sound-loop"> Play it again and again</label>
+      </div>
+      <p class="muted de-help">The sound starts when the slide comes up and stops when you move on. Add sound files in the Media Library.</p>
+      <h3 id="h-de-timing">Timing</h3>
+      <p id="de-timing-for" class="muted de-help"></p>
+      <label for="de-delay">Delay on the selected slides</label>
+      <div class="inline">
+        <select id="de-delay"></select>
+        <input id="de-delay-sec" type="number" min="1" max="600" step="1" aria-label="Seconds before moving on" hidden>
+        <span id="de-delay-unit" class="muted" hidden>seconds</span>
+      </div>
+      <label for="de-trans">Transition into the selected slides</label>
+      <div class="inline">
+        <select id="de-trans"></select>
+        <input id="de-trans-sec" type="number" min="0" max="2" step="0.1" aria-label="Transition length in seconds" hidden>
+        <span id="de-trans-unit" class="muted" hidden>seconds</span>
+      </div>
+      <p id="de-timing-hint" class="muted de-help"></p>
+    </section>
+  </div>
+</main>
+
+<main class="grid lib lib-view media-page" id="view-media" hidden>
+  <div class="stack-col">
+    <section class="col" data-fold="media" aria-labelledby="h-media">
+      <h2 id="h-media">Media Library</h2>
+      <p class="muted">Pictures, videos and sound for your services. Add a file once, then use it as a service item, as music under the slides, or as a page in a slideshow (in the slideshow editor, <b>Add from Media Library</b>). Videos are MP4 (H.264); sound is MP3 or WAV.</p>
+      <details id="media-help" class="media-help">
+        <summary>How to prepare a video (and what to do if one will not play)</summary>
+        <p>ChurchLight, OBS and XSplit play video most reliably as an <b>MP4 with H.264 video and AAC sound, at 1080p or smaller and 30 frames a second or less</b>. Phones, cameras and screen recorders sometimes save in newer formats (H.265, HEVC, 10-bit, 4K or 60 frames a second) that look fine in a media player but freeze or stay black here.</p>
+        <p><b>To re-save a video so it always works</b> (this is outside ChurchLight and free):</p>
+        <ol>
+          <li>Install <b>HandBrake</b> from <b>handbrake.fr</b>.</li>
+          <li>Open HandBrake and drag your video into it.</li>
+          <li>Under <b>Preset</b>, choose <b>Fast 1080p30</b>.</li>
+          <li>Check that <b>Format</b> says <b>MP4</b>.</li>
+          <li>Choose where to save it, press <b>Start</b>, and wait for it to finish.</li>
+          <li>Add the new file here. You can delete the old one from this list.</li>
+        </ol>
+        <p><b>If a video is already playing badly:</b> press <b>Clear live</b>, remove that video from the list below, and add the re-saved copy. Sound files can be MP3 or WAV.</p>
+      </details>
+      <p id="import-off-media" class="muted import-off" hidden>Importing is off because the program was started without a media folder. Start it with <code>--media media</code>.</p>
+      <div class="import-controls">
+        <div class="buttons">
+          <button type="button" id="pick-media">Choose pictures, videos or sound…</button>
+          <label class="check">Show <select id="media-filter" aria-label="Which kind of file to list">
+            <option value="all">Everything</option><option value="image">Pictures</option>
+            <option value="video">Videos</option><option value="audio">Sound</option></select></label>
+        </div>
+        <input type="file" id="file-media" accept=".mp4,.m4v,.mp3,.wav,.png,.jpg,.jpeg,.gif,.webp,video/mp4,audio/mpeg,audio/wav,image/*" multiple hidden>
+        <p id="import-status-media" class="muted" role="status"></p>
+      </div>
+      <ul id="media-list" class="list media-picks"></ul>
+      <details id="media-sources-fold" class="media-sources-fold">
+        <summary>From slideshows and themes <span id="media-sources-count" class="muted"></span></summary>
+        <p class="muted">Pictures that came in another way: slides inside slideshows, theme backgrounds and the home screen picture. They are listed here so you can see everything, but they are managed where they came from.</p>
+        <ul id="media-sources" class="list media-picks"></ul>
+      </details>
+    </section>
+  </div>
+  <div class="stack-col media-preview-col">
+    <section class="col media-preview" aria-labelledby="h-media-preview">
+      <h2 id="h-media-preview">Preview</h2>
+      <div id="media-preview" aria-live="polite"><p class="muted">Choose a file on the left to see it here and to use it.</p></div>
+    </section>
+  </div>
+</main>
+
+<main class="grid lib lib-view" id="view-bibles" hidden>
+  <div class="stack-col">
+    <section class="col" aria-labelledby="h-import-bibles">
+      <h2 id="h-import-bibles">Add a Bible</h2>
+      <p id="import-off-bibles" class="muted import-off" hidden>Importing is off because the program was started without a media folder. Start it with <code>--media media</code>.</p>
+      <div class="import-controls" data-view="bibles">
+        <div class="import-block">
+          
+          <p class="muted">A Zefania <code>.xml</code> file, or a <code>.csv</code> with book, chapter, verse, text. Use a Bible you are licensed to use.</p>
+          <div class="inline">
+            <input id="bible-abbr" type="text" maxlength="16" placeholder="Short name, e.g. KJV" aria-label="Short name for the Bible">
+            <input id="bible-name" type="text" maxlength="200" placeholder="Full name (optional)" aria-label="Full name of the Bible">
+          </div>
+          <button type="button" id="pick-bible">Choose a Bible file…</button>
+          <input type="file" id="file-bible" accept=".xml,.csv,.tsv,.txt" hidden>
+        </div>
+        <p id="import-status-bibles" class="muted" role="status"></p>
+      </div>
+      <h3>Recent imports</h3>
+      <ul id="import-jobs-bibles" class="list import-jobs" data-kind="bible"><li class="muted">Nothing imported yet</li></ul>
+    </section>
+  </div>
+
+  <div class="stack-col wide">
+    <section class="col" aria-labelledby="h-bible-look">
+      <h2 id="h-bible-look">How verses look</h2>
+      <label class="theme-control bible-theme"><span class="theme-label">Bible verses on the projector use</span>
+        <select id="bibles-theme" aria-label="Theme for Bible verses on the projector"></select></label>
+      <label class="theme-control bible-theme"><span class="theme-label">A verse over a slideshow uses</span>
+        <select id="bibles-over-theme" aria-label="Overlay theme for a verse shown over a slideshow"></select></label>
+      <p class="muted help">This look is used for every verse on the projector, and the way it splits long verses (characters per slide) applies to all screens. Make or edit themes on the Themes tab. A theme picked on one item wins.</p>
+      <p class="muted help">A verse shown over a slideshow can have a look of its own on the projector: choose an Overlay theme above to set its box (position, width, band) and text, as for a lower third. The lower third keeps its own theme. Leave it on "Same as the Bible theme" to keep the Bible look. To keep these verses off the projector altogether, tick "Lower third only" in that theme on the Themes tab.</p>
+    </section>
+    <section class="col" data-fold="bibles" aria-labelledby="h-bibles">
+      <h2 id="h-bibles">Bibles</h2>
+      <ul id="bible-list" class="list"></ul>
+    </section>
+
+  </div>
+</main>
+
+<main class="broadcast" id="view-broadcast" hidden>
+  <section class="col" aria-labelledby="h-broadcast">
+    <h2 id="h-broadcast">Alerts Settings</h2>
+    <h3 id="h-ts">Countdown and alert style</h3>
+    <p class="muted help">How the countdown and the speaker alert look. Each change saves straight away and applies to every screen. Start a countdown or send an alert from the Announcements and timer tab on the Service page.</p>
+    <details class="settings-fold" id="ts-proj">
+      <summary><h4>Projector: big clock and scrolling bar</h4></summary>
+      <div class="ts-switch" role="radiogroup" aria-label="Which one to edit">
+        <label><input type="radio" name="ts-edit" value="clock" checked> Big clock</label>
+        <label><input type="radio" name="ts-edit" value="bar"> Scrolling bar</label>
+        <button type="button" id="ts-use" title="Make the projector show the one you are editing">Show this one on the projector</button>
+        <span id="ts-live-mode" class="muted" role="status"></span>
+      </div>
+      <div class="timer-style">
+        <div>
+          <div id="ts-controls-clock" class="ts-controls"></div>
+          <div id="ts-controls-bar" class="ts-controls" hidden></div>
+        </div>
+        <figure class="frame-box ts-frame ts-edit-frame">
+          <div class="frame-view" id="ts-proj-view"><iframe id="ts-frame-projector" title="Countdown preview on the projector" tabindex="-1"></iframe><div id="ts-rect" class="ts-rect" hidden></div></div>
+          <figcaption class="muted" id="ts-proj-caption">Drag the box to move it. Drag its edges and corners to resize it.</figcaption>
+        </figure>
+      </div>
+    </details>
+    <details class="settings-fold" id="ts-speak">
+      <summary><h4>Stage and confidence screens: timer and alert</h4></summary>
+      <p class="muted help">The stage and confidence screens have their own look, separate from the projector's.</p>
+      <div class="buttons"><button type="button" id="ts-copy-stage">Copy the projector's font and colors here</button></div>
+      <div class="timer-style">
+        <div id="ts-controls-speaker" class="ts-controls"></div>
+        <figure class="frame-box ts-frame"><div class="frame-view"><iframe id="ts-frame-speaker" title="Timer and alert preview on the speaker screens" tabindex="-1"></iframe></div><figcaption class="muted">Stage and confidence screens</figcaption></figure>
+      </div>
+    </details>
+    <div class="buttons"><button type="button" id="ts-reset">Reset to the standard look</button></div>
+    <p class="muted help">The home screen picture and the shape of each screen are on the Settings tab.</p>
+  </section>
+</main>
+<main class="shortcuts" id="view-shortcuts" hidden>
+  <section class="col" aria-labelledby="h-shortcuts">
+    <div class="inline theme-title">
+      <h2 id="h-shortcuts">Settings</h2>
+      <button type="button" id="shortcuts-back" class="primary">← Back to Service</button>
+      <button type="button" id="settings-fold-all">Fold all</button>
+    </div>
+    <p class="muted help">Set-once options for the whole program: how the screens look and which keys run the service.</p>
+    <div class="buttons"><button type="button" id="btn-run-setup" title="Walk through the first-time setup again: the computer check, screens, OBS or XSplit, content and the clicker">Run the setup guide again</button></div>
+    <h3 class="settings-group">Everyday</h3>
+    <details class="settings-fold" data-settings-fold="windows" open>
+      <summary><h3>Projector windows</h3></summary>
+    <p class="muted help">ChurchLight can open its own full-screen windows on your projector, stage and confidence monitors (Windows with Edge or Chrome). The browser plays the video itself, which is smoother than a browser source inside OBS or XSplit. To put a screen on the livestream, capture that window or monitor in OBS or XSplit. Press <strong>Esc</strong> on a screen window to close it. Sound still comes from this window.</p>
+    <ul id="pw-list" class="list pw-list"></ul>
+    <div class="buttons">
+      <button type="button" id="pw-open" class="primary">Open the screens</button>
+      <button type="button" id="pw-close">Close the screens</button>
+    </div>
+    <label class="check"><input type="checkbox" id="pw-auto"> Open the screens whenever ChurchLight starts</label>
+    <p id="pw-status" class="muted" role="status"></p>
+    </details>
+    <details class="settings-fold" data-settings-fold="screens" open>
+      <summary><h3>Screens</h3></summary>
+    <h4>Home screen</h4>
+    <p class="muted help">A picture the projector shows when nothing else should be on screen: while nothing is live (no service open, or before the first slide) and, if you like, while the screens are blanked, for example between parts of the service. Press Blank to show it and again to go back. With no picture, the projector shows nothing. The lower third and other screens are not affected.</p>
+    <div class="home-box" id="home-box">
+      <img id="home-thumb" class="home-thumb" alt="The home screen picture" hidden>
+      <div class="buttons">
+        <input type="file" id="home-file" accept="image/png,image/jpeg,image/webp,image/gif" hidden>
+        <button type="button" id="home-choose">Choose picture…</button>
+        <button type="button" id="home-remove" hidden>Remove</button>
+      </div>
+      <label class="check home-on"><input type="checkbox" id="home-on" checked> Show it when I blank the screens</label>
+      <label class="check home-on"><input type="checkbox" id="home-idle" checked> Show it when nothing is live (before the service starts, or with no service open)</label>
+      <label class="theme-control"><span class="theme-label">Picture size</span>
+        <select id="home-fit" aria-label="How the home screen picture fits the screen">
+          <option value="fit">Fit: the whole picture, may leave bands</option>
+          <option value="fill">Fill: covers the screen, may crop</option>
+        </select></label>
+      <p id="home-note" class="muted" role="status"></p>
+    </div>
+    <h4>Hide words</h4>
+    <p class="muted help">The Hide words button (W) takes the words off the projector and keeps the background. Choose whether the confidence monitor loses its words too. The stage screens always keep theirs.</p>
+    <label class="check"><input type="checkbox" id="conf-hide-words" checked> Hide words also hides the words on the confidence monitor</label>
+    <h4>Sound</h4>
+    <p class="muted help">Video and music play from this ChurchLight window, on this computer, so the room hears them through the computer's speakers. To put the sound on the stream, add "Desktop Audio" in OBS (it is there by default). Untick this if another window on this computer already plays the sound.</p>
+    <label class="check"><input type="checkbox" id="hear-on" checked> Play video and music sound from this window</label>
+    <h4>Screen shape</h4>
+    <p class="muted help">The shape of the real projector and confidence monitor, so the previews match what the room sees. Set the XSplit or OBS source to the same size.</p>
+    <ul id="shape-list" class="list shape-list"></ul>
+    <h4>Screen addresses</h4>
+    <p class="muted help">Paste an address into an OBS or XSplit web page source (a "browser source" in OBS) to show that screen. Use the first list on this computer. The second list, when it appears, is for another computer on your network.</p>
+    <ul id="address-list" class="list address-list"></ul>
+    <div id="address-lan" hidden>
+      <p class="muted help">For another computer on your network:</p>
+      <ul id="address-lan-list" class="list address-list"></ul>
+    </div>
+    </details>
+    <details class="settings-fold" data-settings-fold="notice" open>
+      <summary><h3>Song title and CCLI slide</h3></summary>
+    <p class="muted help">Every song can start (or end) with a slide that shows its title, writers, copyright notice, CCLI song number and your church's CCLI license number. Anything a song does not have is left out. A song can choose its own setting in the song editor, and a service can leave it out for one song.</p>
+    <div id="notice-box" class="stack">
+      <label class="theme-control"><span class="theme-label">Show it</span>
+        <select id="notice-position" aria-label="Where the title and CCLI slide goes">
+          <option value="before">Before the song</option><option value="after">After the song</option><option value="off">Off</option>
+        </select></label>
+      <label class="theme-control"><span class="theme-label">Writers line starts with</span>
+        <input id="notice-writers" type="text" maxlength="60" placeholder="Words and music by" aria-label="How the writers line starts"></label>
+      <label class="theme-control"><span class="theme-label">After the copyright</span>
+        <input id="notice-permission" type="text" maxlength="80" placeholder="Used by Permission." aria-label="Text after the copyright line"></label>
+      <label class="check"><input type="checkbox" id="notice-songnum" checked> Include the song's own CCLI number</label>
+      <div class="buttons"><button type="button" id="notice-save">Save</button></div>
+      <p id="notice-note" class="muted" role="status"></p>
+    </div>
+    </details>
+    <details class="settings-fold" data-settings-fold="themes" open>
+      <summary><h3>Move themes to another computer</h3></summary>
+    <p class="muted help">Share your own themes with another ChurchLight computer, or keep a copy. The file holds each theme's look, Bible and song settings and background pictures, not where a theme is used. Starter themes you have not changed are left out of "Export all". Fonts are not included: a font must also be installed on the other computer, or a similar one is used.</p>
+    <div class="inline theme-find">
+      <select id="theme-export-pick" aria-label="Theme to export"></select>
+      <button type="button" id="theme-export-one" disabled>Export this theme</button>
+    </div>
+    <div class="buttons">
+      <button type="button" id="theme-export-all" title="Everything except the starter themes you have not changed">Export all my themes</button>
+      <button type="button" id="theme-import" title="A .zip made by Export on another ChurchLight computer">Import themes…</button>
+      <input type="file" id="file-themes" accept=".zip" hidden>
+    </div>
+    <p id="theme-transfer-status" class="muted" role="status"></p>
+    </details>
+    <details class="settings-fold settings-advanced" data-settings-fold="advanced" open>
+      <summary><h3>Advanced</h3></summary>
+      <details class="settings-fold" data-settings-fold="pdf" open>
+        <summary><h3>PDF import</h3></summary>
+      <p class="muted help">PDF files are turned into slideshow pages by a renderer that comes with the program. If this says it is not set up, PDFs cannot be added until it is.</p>
+      <p id="pdf-status" class="pdf-status" role="status">Checking…</p>
+      </details>
+      <details class="settings-fold" data-settings-fold="triggers" open>
+        <summary><h3>Remote button links</h3></summary>
+      <p class="muted help">Links that press a button when opened (also called Trigger URLs), for a Stream Deck, XSplit or any program that can open a web address. They work on this computer only. Each link includes a private code, so only copy it into your own tools and do not post it anywhere; if it gets out, make a new private code.</p>
+      <div class="hook-box" id="hook-box">
+        <label class="check"><input type="checkbox" id="hook-on" checked> Remote button links are on</label>
+        <ul id="hook-list" class="list hook-list"></ul>
+        <div class="buttons"><button type="button" id="hook-new">Make a new private code</button></div>
+        <p id="hook-note" class="muted" role="status"></p>
+      </div>
+      </details>
+      <details class="settings-fold" data-settings-fold="clicker" open>
+        <summary><h3>Clicker helper (Windows)</h3></summary>
+      <p class="muted help">A presentation clicker types ordinary keys (Page Down, Page Up and so on). The helper catches those keys and sends only a remote button link, so the clicker moves ChurchLight and nothing else on the computer sees the key. ChurchLight comes with the free AutoHotkey program it needs, so there is nothing to install.</p>
+      <ul id="clicker-list" class="list clicker-list"></ul>
+      <div class="buttons">
+        <button type="button" id="clicker-add">Add a button</button>
+        <button type="button" id="clicker-start" class="primary" hidden>Start the clicker helper</button>
+        <button type="button" id="clicker-stop" hidden>Stop the helper</button>
+        <button type="button" id="clicker-download" title="For a computer that already has AutoHotkey v2 installed">Download the helper script</button>
+      </div>
+      <label class="check" id="clicker-auto-line" hidden><input type="checkbox" id="clicker-auto"> Start the helper whenever ChurchLight starts</label>
+      <p id="clicker-status" class="muted" role="status"></p>
+      <ol class="muted help clicker-steps">
+        <li>Press <strong>Press the button</strong>, then press that button on the clicker. Choose what it should do.</li>
+        <li>Press <strong>Start the clicker helper</strong>. A message says the clicker is ready. If you change the buttons afterwards, press it again (it then says Restart).</li>
+        <li><strong>Ctrl+Alt+F12</strong> turns the clicker on and off. If ChurchLight is not running, the keys work normally again.</li>
+        <li>Making a new private code (Remote button links, above) restarts the helper by itself. Turning Remote button links off stops it.</li>
+      </ol>    <p class="muted help">The script contains the private code from the Remote button links above, so keep it on this computer and do not send it around. After you make a new private code, download the script again.</p>
+      </details>
+      <details class="settings-fold" data-settings-fold="keys" open>
+        <summary><h3>Keys for running the service</h3></summary>
+      <p class="muted help">These keys move the service along while this window is in front and you are not typing in a box. They work on the Service and Alerts Settings tabs. Press Change next to a job, then press the key you want. Your choices are kept in this browser.</p>
+      <p id="keys-note" class="muted hint" role="status"></p>
+      <table class="keys-table"><tbody id="keys-body"></tbody></table>
+      <div class="buttons"><button type="button" id="keys-reset">Reset all shortcuts</button></div>
+      </details>
+      <details class="settings-fold" data-settings-fold="anykeys" open>
+        <summary><h3>Keys that work in any program</h3></summary>
+      <p class="muted help">For a clicker or keyboard when another program, such as XSplit, is in front. Windows only. Off until you turn them on. While on, the keys below are taken from every program on this computer so a clicker or keyboard can move the service from anywhere. Turn them off and the keys go straight back. Only the keys you choose here are used, and they are never turned on by themselves when the program starts.</p>
+      <p id="gk-note" class="muted hint" role="status"></p>
+      <div class="buttons"><button type="button" id="gk-toggle" class="primary">Turn on global shortcuts</button></div>
+      <table class="keys-table"><tbody id="gk-body"></tbody></table>
+      </details>
+    </details>
+    <p id="build-note" class="muted help"></p>
+  </section>
+</main>
+<script src="/static/themes.js"></script>
+<script src="/static/operator.js"></script>
+<script src="/static/wizard.js"></script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+AutoHotkey v2.0.31 (64-bit) is included, unchanged, so the ChurchLight clicker helper works without a separate
+download. It is a separate program, run on its own; ChurchLight Presenter does not link to it.
+
+AutoHotkey is free software under the GNU General Public License version 2 (license.txt in this folder).
+Its source code is available from https://github.com/AutoHotkey/AutoHotkey (the v2.0.31 release) and from
+https://www.autohotkey.com/. The file AutoHotkey64.exe here is the one from the official AutoHotkey_2.0.31.zip.
